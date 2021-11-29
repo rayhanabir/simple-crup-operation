@@ -40,7 +40,6 @@ async function run() {
         const id = req.params.id;
         const user = {_id:ObjectId(id)}
         const result = await usersCollection.findOne(user)
-        console.log("got my id", id);
         res.send(result)
     })
      
@@ -49,9 +48,27 @@ async function run() {
       app.post('/users', async(req, res)=>{
           const newUser = req.body;
           const result = await usersCollection.insertOne(newUser);
-            console.log('got new user', req.body)
-            console.log('added user', result)
+            // console.log('got new user', req.body)
+            // console.log('added user', result)
             res.json(result)
+      });
+
+      //update name and email put method =>
+
+      app.put('/users/:id', async(req, res)=>{
+          const id = req.params.id;
+          const updatedUser = req.body;
+          const filter = {_id:ObjectId(id)};
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+              name:updatedUser.name,
+              email:updatedUser.email
+            },
+          };
+          const result = await usersCollection.updateOne(filter, updateDoc, options)
+          console.log("getting putting id", id)
+          res.json(result)
       })
       
       //delete api 
@@ -60,7 +77,7 @@ async function run() {
             const id = req.params.id;
             const query = {_id:ObjectId(id)}
             const result = await usersCollection.deleteOne(query);
-            console.log('deleting user', result);
+            // console.log('deleting user', result);
             res.json(result)
       })
       
