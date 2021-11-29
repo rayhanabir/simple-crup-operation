@@ -33,6 +33,16 @@ async function run() {
         res.send(users);
 
       })
+
+      // find single user 
+
+      app.get('/users/:id', async(req, res)=>{
+        const id = req.params.id;
+        const user = {_id:ObjectId(id)}
+        const result = await usersCollection.findOne(user)
+        console.log("got my id", id);
+        res.send(result)
+    })
      
       //post api =>
 
